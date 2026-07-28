@@ -1,3 +1,39 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>6-Month Reset</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#004b50"><meta name="mobile-web-app-capable" content="yes"><link rel="apple-touch-icon" href="icon-192.png"><style>body{margin:0;background:#eef4f4;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}#ld{padding:70px 24px;text-align:center;color:#4e7477;font-size:14px}</style></head><body><div id="ld">Loading…</div><script>
-(async()=>{const k="sb_publishable_5wRvqbONlp_n25Y6nndR5Q_Tyfyfu8_";try{const r=await fetch("https://jkeekuxpmbasgrsdrymy.supabase.co/rest/v1/dashboard_assets?id=eq.dashboard&select=html&t="+Date.now(),{cache:"no-store",headers:{apikey:k,Authorization:"Bearer "+k,Accept:"application/vnd.pgrst.object+json"}});if(!r.ok)throw 0;const d=await r.json();document.open();document.write(d.html);document.close();}catch(e){document.getElementById("ld").innerHTML="Couldn’t load your dashboard.<br>Check your connection and pull down to refresh.";}})();
-</script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>6-Month Reset</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#004b50">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" href="icon-192.png">
+<style>body{margin:0;background:#eef4f4;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+#ld{padding:70px 24px;text-align:center;color:#4e7477;font-size:14px;line-height:1.6}</style>
+</head>
+<body>
+<div id="ld">Loading&hellip;</div>
+<script>
+(async()=>{
+  const k="sb_publishable_5wRvqbONlp_n25Y6nndR5Q_Tyfyfu8_";
+  try{
+    const r=await fetch("https://jkeekuxpmbasgrsdrymy.supabase.co/rest/v1/dashboard_assets?id=eq.dashboard&select=html&t="+Date.now(),
+      {cache:"no-store",headers:{apikey:k,Authorization:"Bearer "+k,Accept:"application/vnd.pgrst.object+json"}});
+    if(!r.ok) throw 0;
+    const d=await r.json();
+    // Swap in the dashboard WITHOUT document.write, so the PWA manifest stays intact
+    const doc=new DOMParser().parseFromString(d.html,"text/html");
+    doc.querySelectorAll("style").forEach(s=>document.head.appendChild(s.cloneNode(true)));
+    const scripts=[...doc.querySelectorAll("script")].filter(s=>!s.type||s.type==="text/javascript");
+    scripts.forEach(s=>s.remove());
+    document.body.innerHTML=doc.body.innerHTML;
+    scripts.forEach(s=>{const n=document.createElement("script");n.textContent=s.textContent;document.body.appendChild(n);});
+  }catch(e){
+    document.getElementById("ld").innerHTML="Couldn&rsquo;t load your dashboard.<br>Check your connection and pull down to refresh.";
+  }
+})();
+</script>
+</body>
+</html>
