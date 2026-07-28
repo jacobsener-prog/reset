@@ -18,18 +18,17 @@
 <script>
 (async()=>{
   const k="sb_publishable_5wRvqbONlp_n25Y6nndR5Q_Tyfyfu8_";
+  const URL_="https://jkeekuxpmbasgrsdrymy.supabase.co/rest/v1/dashboard_assets?id=eq.dashboard&select=html";
   try{
-    const r=await fetch("https://jkeekuxpmbasgrsdrymy.supabase.co/rest/v1/dashboard_assets?id=eq.dashboard&select=html&t="+Date.now(),
-      {cache:"no-store",headers:{apikey:k,Authorization:"Bearer "+k,Accept:"application/vnd.pgrst.object+json"}});
-    if(!r.ok) throw 0;
+    const r=await fetch(URL_,{cache:"no-store",headers:{apikey:k,Authorization:"Bearer "+k,Accept:"application/vnd.pgrst.object+json"}});
+    if(!r.ok) throw new Error(r.status);
     const d=await r.json();
-    // Swap in the dashboard WITHOUT document.write, so the PWA manifest stays intact
     const doc=new DOMParser().parseFromString(d.html,"text/html");
     doc.querySelectorAll("style").forEach(s=>document.head.appendChild(s.cloneNode(true)));
-    const scripts=[...doc.querySelectorAll("script")].filter(s=>!s.type||s.type==="text/javascript");
-    scripts.forEach(s=>s.remove());
+    const runnable=[...doc.querySelectorAll("script")].filter(s=>!s.type||s.type==="text/javascript");
+    runnable.forEach(s=>s.remove());
     document.body.innerHTML=doc.body.innerHTML;
-    scripts.forEach(s=>{const n=document.createElement("script");n.textContent=s.textContent;document.body.appendChild(n);});
+    runnable.forEach(s=>{const n=document.createElement("script");n.textContent=s.textContent;document.body.appendChild(n);});
   }catch(e){
     document.getElementById("ld").innerHTML="Couldn&rsquo;t load your dashboard.<br>Check your connection and pull down to refresh.";
   }
