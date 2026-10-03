@@ -1,4 +1,5 @@
 {
+ "id": "./?app=reset-v2",
  "name": "6-Month Reset",
  "short_name": "Reset",
  "start_url": "./",
